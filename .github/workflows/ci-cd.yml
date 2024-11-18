@@ -28,3 +28,21 @@ jobs:
             
             - name: Build App
               run: dotnet build -c Release --no-restore 241118_CI_CD_WebApplication/241118_CI_CD_WebApplication.sln
+
+            # Tests
+            - name: Automated Tests
+              run: dotnet test Weather.Tests -c Release --no-build
+
+            # Publish
+            - name: Publish App
+              run: dotnet publish -c Release -o ./out 241118_CI_CD_WebApplication/241118_CI_CD_WebApplication.sln
+
+            - name: Deploy to Azure Web Apps
+              uses: azure/webapps-deploy@v2
+              with:
+                app-name: Weather-App-0
+                publish-profile: ${{secrets.WEATHERAPP}}
+                package: ./out
+
+
+            
